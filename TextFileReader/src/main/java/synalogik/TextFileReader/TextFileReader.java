@@ -43,7 +43,7 @@ public class TextFileReader {
 		// Reset the count variables when a new file is read
 		wordCount = 0;
 		totalWordsLength = 0;
-		wordLengthCounts = new HashMap<Integer, Integer>();
+		wordLengthCounts.clear();
 		if (getFilepath() == null) {
 			throw new FileNotFoundException("Filepath cannot be null, please enter a valid filepath.");
 		}
@@ -77,9 +77,9 @@ public class TextFileReader {
 		int maxLengthCount = findMaxCountFromMap();
 		
 		//build output string
-		sb.append("Word Count = ").append(getWordCount());
-		sb.append("\nAverage word length = ").append(calculateAverageWordLength());
-		for (Map.Entry<Integer, Integer> entry : getWordLengthCounts().entrySet()) {
+		sb.append("Word Count = " + getWordCount());
+		sb.append("\nAverage word length = " + calculateAverageWordLength());
+		for (Map.Entry<Integer, Integer> entry : wordLengthCounts.entrySet()) {
 			sb.append("\nNumber of words of length " + entry.getKey() + " is " + entry.getValue());
 			if (entry.getValue() == maxLengthCount) {
 				mostCommonWordLengths.add(entry.getKey().toString());
