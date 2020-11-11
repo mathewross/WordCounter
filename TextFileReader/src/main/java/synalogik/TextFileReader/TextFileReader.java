@@ -33,16 +33,17 @@ public class TextFileReader {
 	 */
 	public TextFileReader(String filepath) throws FileNotFoundException {
 		this.filepath = filepath;
-		setWordCount(0);
-		setTotalWordsLength(0);
-		readInFile();
 	}
 	
 	/**
 	 * Tries to read the file and handle each line until the whole document has been read.
 	 * @throws FileNotFoundException 
 	 */
-	private void readInFile() throws FileNotFoundException {
+	public void readInFile() throws FileNotFoundException {
+		// Reset the count variables when a new file is read
+		wordCount = 0;
+		totalWordsLength = 0;
+		wordLengthCounts = new HashMap<Integer, Integer>();
 		if (getFilepath() == null) {
 			throw new FileNotFoundException("Filepath cannot be null, please enter a valid filepath.");
 		}
@@ -106,16 +107,16 @@ public class TextFileReader {
 			}
 			
 			// Increment word count, add length of word to map, increment count if it already exists in the map
-			setWordCount(getWordCount() + 1);
+			wordCount++;
 			int wordLength = trimmedWord.length();
-			if (getWordLengthCounts().containsKey(wordLength)){
-				getWordLengthCounts().put(wordLength, getWordLengthCounts().get(wordLength) + 1);
+			if (wordLengthCounts.containsKey(wordLength)){
+				wordLengthCounts.put(wordLength, wordLengthCounts.get(wordLength) + 1);
 			} else {
-				getWordLengthCounts().put(wordLength, 1);
+				wordLengthCounts.put(wordLength, 1);
 			}
 			
 			// Store the total word length for calculating average later
-			setTotalWordsLength(getTotalWordsLength() + wordLength);
+			totalWordsLength += wordLength;
 		}
 	}
 	
@@ -150,7 +151,7 @@ public class TextFileReader {
 	public int findMaxCountFromMap() {
 		// Loop through the word length count map and determine what the highest value is
 		int maxCount = 0;
-		for (Integer lengthCount : getWordLengthCounts().values()) {
+		for (Integer lengthCount : wordLengthCounts.values()) {
 			if (lengthCount > maxCount) {
 				maxCount = lengthCount;
 			}
@@ -164,10 +165,10 @@ public class TextFileReader {
 	 * @return
 	 */
 	public String calculateAverageWordLength() {
-		if (getTotalWordsLength() == 0 || getWordCount() == 0) {
+		if (totalWordsLength == 0 || wordCount == 0) {
 			return "0.000";
 		}
-		double average = (double)getTotalWordsLength() / (double)getWordCount();
+		double average = (double)totalWordsLength / (double)wordCount;
 		return String.format("%.3f", average);
 	}
 
@@ -175,16 +176,8 @@ public class TextFileReader {
 		return wordCount;
 	}
 
-	public void setWordCount(int wordCount) {
-		this.wordCount = wordCount;
-	}
-
 	private HashMap<Integer, Integer> getWordLengthCounts() {
 		return wordLengthCounts;
-	}
-
-	private void setWordLengthCounts(HashMap<Integer, Integer> wordLengthCounts) {
-		this.wordLengthCounts = wordLengthCounts;
 	}
 
 	public String getFilepath() {
@@ -197,10 +190,6 @@ public class TextFileReader {
 
 	public int getTotalWordsLength() {
 		return totalWordsLength;
-	}
-
-	public void setTotalWordsLength(int totalWordsLength) {
-		this.totalWordsLength = totalWordsLength;
 	}
 		
 }
