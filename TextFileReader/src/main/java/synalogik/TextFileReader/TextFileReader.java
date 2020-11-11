@@ -84,7 +84,7 @@ public class TextFileReader {
 				mostCommonWordLengths.add(entry.getKey().toString());
 			}
 		}
-		sb.append("\nThe most frequently occuring word length is " + maxLengthCount + " for word lengths of " + String.join(" & ", mostCommonWordLengths));
+		sb.append("\nThe most frequently occuring word length appears " + maxLengthCount + " times for words of length " + String.join(" & ", mostCommonWordLengths));
 		System.out.println(sb.toString());
 	}
 	
@@ -121,16 +121,18 @@ public class TextFileReader {
 	
 	/**
 	 * Trims any unnecessary characters from a word, including trailing punctuation and white space.
-	 * Then determines if what is left is a valid word according to our description.
+	 * Then determines if what is left is a valid word according to my interpretation.
 	 * @param word : String of the current word in the text file being processed
 	 * @return either the trimmed word or null if it isn't determined to be a word
 	 */
 	private String trimWord(String word) {
 		String trimmedWord = word.trim();
-		// Check if the word is an alphanumeric word or a joining character such as &, if not return null
+		// If the word isn't a single character (such as &) trim it from trailing punctuation
 		if (word.length() > 1) {
-			trimmedWord = trimmedWord.replaceAll("[,.?!:;]$", ""); // This regex probably needs to be better
+			trimmedWord = trimmedWord.replaceAll("[,.?!:;]$", "");
 		}
+		// Return the word if after being trimmed it still contains alphanumeric characters,
+		// or if it is a single non alphanumeric character, otherwise return null
 		if (trimmedWord.matches(".+[a-zA-Z0-9]")){
 			return trimmedWord;
 		} else if (trimmedWord.length() == 1) {
